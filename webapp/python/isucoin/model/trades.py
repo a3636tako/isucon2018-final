@@ -244,6 +244,7 @@ def run_trade(db):
 
 
 def get_candlestic_data_hour(db, mt: datetime, tf: str) -> typing.List[CandlestickData]:
+    cur = db.cursor()
     cur.execute("SELECT count(*) from trade WHERE trade.created_at > (SELECT IFNULL(MAX(can.create_at), '1000-01-01 00:00:00') FROM candle as can) limit 1" )
     if cur.fetchone()[0] != 0:
         query = """
@@ -266,7 +267,6 @@ def get_candlestic_data_hour(db, mt: datetime, tf: str) -> typing.List[Candlesti
             ORDER BY m.t
             ON DUPLICATE KEY UPDATE create_at=m.t, open=a.price, close=b.price, high = m.h, low = m.l
         """
-        cur = db.cursor()
         cur.execute(query)
 
     cur.execute("SELECT STR_TO_DATE(DATE_FORMAT(create_at, %s), %s), open, close, high, low FROM candle WHERE create_at >= %s",  (tf, "%Y-%m-%d %H:%i:%s", mt))
@@ -274,6 +274,7 @@ def get_candlestic_data_hour(db, mt: datetime, tf: str) -> typing.List[Candlesti
     return [CandlestickData(*r) for r in cur]
 
 def get_candlestic_data_min(db, mt: datetime, tf: str) -> typing.List[CandlestickData]:
+    cur = db.cursor()
     cur.execute("SELECT count(*) from trade WHERE trade.created_at > (SELECT IFNULL(MAX(can.create_at), '1000-01-01 00:00:00') FROM candle_min as can) limit 1" )
     if cur.fetchone()[0] != 0:
 
@@ -297,7 +298,6 @@ def get_candlestic_data_min(db, mt: datetime, tf: str) -> typing.List[Candlestic
             ORDER BY m.t
             ON DUPLICATE KEY UPDATE create_at=m.t, open=a.price, close=b.price, high = m.h, low = m.l
         """
-        cur = db.cursor()
         cur.execute(query)
 
     cur.execute("SELECT STR_TO_DATE(DATE_FORMAT(create_at, %s), %s), open, close, high, low FROM candle_min WHERE create_at >= %s",  (tf, "%Y-%m-%d %H:%i:%s", mt))
@@ -305,6 +305,7 @@ def get_candlestic_data_min(db, mt: datetime, tf: str) -> typing.List[Candlestic
     return [CandlestickData(*r) for r in cur]
 
 def get_candlestic_data_sec(db, mt: datetime, tf: str) -> typing.List[CandlestickData]:
+    cur = db.cursor()
     cur.execute("SELECT count(*) from trade WHERE trade.created_at > (SELECT IFNULL(MAX(can.create_at), '1000-01-01 00:00:00') FROM candle_sec as can) limit 1" )
     if cur.fetchone()[0] != 0:
         query = """
@@ -327,7 +328,6 @@ def get_candlestic_data_sec(db, mt: datetime, tf: str) -> typing.List[Candlestic
             ORDER BY m.t
             ON DUPLICATE KEY UPDATE create_at=m.t, open=a.price, close=b.price, high = m.h, low = m.l
         """
-        cur = db.cursor()
         cur.execute(query)
 
     cur.execute("SELECT STR_TO_DATE(DATE_FORMAT(create_at, %s), %s), open, close, high, low FROM candle_sec WHERE create_at >= %s",  (tf, "%Y-%m-%d %H:%i:%s", mt))
