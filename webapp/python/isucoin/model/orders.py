@@ -186,3 +186,21 @@ def cancel_order(db, order: Order, reason: str):
         order.type + ".delete",
         {"order_id": order.id, "user_id": order.user_id, "reason": reason},
     )
+
+def get_traded_orders(db, user_id: int, trade_id: int) -> typing.List[Order]:
+    c = db.cursor()
+    c.execute(
+        "SELECT * FROM orders INNER JOIN user ON orders.user_id = user.id, trade ON orders.trade_id = trade.id WHERE user_id = %s AND trade_id IS NOT NULL AND trade_id > %s ORDER BY created_at ASC",
+        (user_id, trade_id),
+    )
+    return [_create_order(r) for r in c]
+
+def _create_order(r):
+    user = users.User(r['user.id'], r['user.back_id'], r['user.name'], r['user.password'], r['usercreated_at'])
+    
+    trade = trades.Trade(r['trade.id'], r['trade.amount'], r['trade.price'], r['trade.created_at'])
+
+    order = Order(r['orders.id'],r['orders.type'],r['orders.user_id'],r['orders.amount'],r['orders.price'],r['orders.closed_at'],r['orders.trade_id'],r['orders.created_at'])
+    order.user = user
+    order.trade = trade
+
