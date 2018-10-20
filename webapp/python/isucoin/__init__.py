@@ -31,6 +31,8 @@ base_time = datetime.datetime(2018, 10, 16, 10, 0, 0)
 
 _dbconn = None
 
+failure_count = dict()
+
 
 def get_dbconn():
     # NOTE: get_dbconn() is not thread safe.  Don't use threaded server.
@@ -170,7 +172,13 @@ def signin():
     try:
         user = model.login(db, bank_id, password)
     except model.UserNotFound as e:
-        # TODO: 失敗が多いときに403を返すBanの仕様に対応
+        if not bank_id in failure_count:
+            failure_count[bank_id] = 1
+        else:
+            failure_count[bank_id] += 1
+        if failure_count[bank_id] >= 5:
+            return error_json(403, "too many failures")
+
         return error_json(404, e.msg)
 
     flask.session["user_id"] = user.id
