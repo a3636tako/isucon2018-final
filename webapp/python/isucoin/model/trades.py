@@ -246,7 +246,9 @@ def run_trade(db):
 def get_candlestic_data_hour(db, mt: datetime, tf: str) -> typing.List[CandlestickData]:
     cur = db.cursor()
     cur.execute("SELECT count(*) from trade WHERE trade.created_at > (SELECT IFNULL(MAX(can.create_at), '1000-01-01 00:00:00') FROM candle as can) limit 1" )
-    if cur.fetchone()[0] != 0:
+    rr = cur.fetchone()
+    print(rr)
+    if rr[0] != 0:
         query = """
             INSERT INTO candle (`create_at`, `time_str`, `open`, `close`, `high`, `low`)
             SELECT m.t AS `create_at`, m.tstr AS `time_str`, a.price AS `open`, b.price AS `close`, m.h AS `high`, m.l AS `low`
@@ -276,7 +278,9 @@ def get_candlestic_data_hour(db, mt: datetime, tf: str) -> typing.List[Candlesti
 def get_candlestic_data_min(db, mt: datetime, tf: str) -> typing.List[CandlestickData]:
     cur = db.cursor()
     cur.execute("SELECT count(*) from trade WHERE trade.created_at > (SELECT IFNULL(MAX(can.create_at), '1000-01-01 00:00:00') FROM candle_min as can) limit 1" )
-    if cur.fetchone()[0] != 0:
+    rr = cur.fetchone()
+    print(rr)
+    if rr[0] != 0:
 
         query = """
             INSERT INTO candle_min (`create_at`, `time_str`, `open`, `close`, `high`, `low`)
@@ -307,7 +311,9 @@ def get_candlestic_data_min(db, mt: datetime, tf: str) -> typing.List[Candlestic
 def get_candlestic_data_sec(db, mt: datetime, tf: str) -> typing.List[CandlestickData]:
     cur = db.cursor()
     cur.execute("SELECT count(*) from trade WHERE trade.created_at > (SELECT IFNULL(MAX(can.create_at), '1000-01-01 00:00:00') FROM candle_sec as can) limit 1" )
-    if cur.fetchone()[0] != 0:
+    rr = cur.fetchone()
+    print(rr)
+    if rr[0] != 0:
         query = """
             INSERT INTO candle_sec (`create_at`, `time_str`, `open`, `close`, `high`, `low`)
             SELECT m.t AS `create_at`, m.tstr AS `time_str`, a.price AS `open`, b.price AS `close`, m.h AS `high`, m.l AS `low`
