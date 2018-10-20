@@ -201,7 +201,7 @@ def _create_order(r):
     trade = trades.Trade(r[13], r[14], r[15], r[16])
 
     order = Order(r[0],r[1],r[2],r[3],r[4],r[5],r[6],r[7])
-    order.user = user
-    order.trade = trade
+    order.user = user.to_json
+    order.trade = asdict(trade)
 
     return order
