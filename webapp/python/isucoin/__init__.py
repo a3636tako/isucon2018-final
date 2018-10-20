@@ -206,12 +206,12 @@ def info():
 
     user = flask.g.current_user
     if user:
-        orders = model.get_orders_by_userid_and_lasttradeid(db, user.id, last_trade_id)
-        for o in orders:
-            model.fetch_order_relation(db, o)
-        res["traded_orders"] = orders
+        #orders = model.get_orders_by_userid_and_lasttradeid(db, user.id, last_trade_id)
+        #for o in orders:
+        #    model.fetch_order_relation(db, o)
+        #res["traded_orders"] = orders
 
-        #res["traded_orders"] = model.get_traded_orders(db, user.id, last_trade_id)
+        res["traded_orders"] = model.get_traded_orders(db, user.id, last_trade_id)
 
     from_t = base_time - datetime.timedelta(seconds=300)
     if lt and lt > from_t:
