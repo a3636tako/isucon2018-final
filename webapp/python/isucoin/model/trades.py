@@ -267,7 +267,7 @@ def get_candlestic_data_hour(db, mt: datetime, tf: str) -> typing.List[Candlesti
     cur = db.cursor()
     cur.execute(query)
 
-    cur.execute("SELECT STR_TO_DATE(create_at), open, close, high, low FROM candle WHERE create_at >= %s",  (mt,))
+    cur.execute("SELECT STR_TO_DATE(time_str), open, close, high, low FROM candle WHERE create_at >= %s",  (mt,))
 
     return [CandlestickData(*r) for r in cur]
 
