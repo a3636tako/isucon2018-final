@@ -196,7 +196,6 @@ def get_traded_orders(db, user_id: int, trade_id: int) -> typing.List[Order]:
     return [_create_order(r) for r in c]
 
 def _create_order(r):
-    print(r)
     user = users.User(r[8], r[9], r[10], r[11], r[12])
     
     trade = trades.Trade(r[13], r[14], r[15], r[16])
