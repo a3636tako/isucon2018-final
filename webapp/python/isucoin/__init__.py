@@ -210,7 +210,7 @@ def info():
         #for o in orders:
         #    model.fetch_order_relation(db, o)
 
-        res["traded_orders"] = get_traded_orders(db, user.id, last_trade_id)
+        res["traded_orders"] = model.get_traded_orders(db, user.id, last_trade_id)
 
     from_t = base_time - datetime.timedelta(seconds=300)
     if lt and lt > from_t:
