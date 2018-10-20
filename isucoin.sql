@@ -39,3 +39,17 @@ CREATE TABLE `user` (
   PRIMARY KEY (`id`),
   UNIQUE KEY `bank_id` (`bank_id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=13694 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+
+
+CREATE TABLE `candle` (
+  `id` bigint(20) NOT NULL AUTO_INCREMENT,
+  `time` datetime NOT NULL,
+  `time_str` char(20), NOT NULL,
+  `open` bigint(20) NOT NULL,
+  `close` bigint(20) NOT NULL,
+  `high` bigint(20) NOT NULL,
+  `low` bigint(20) NOT NULL
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `time_str_idx` (`time_str`),
+  KEY `time_idx` (`time`)
+)

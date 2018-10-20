@@ -227,6 +227,7 @@ def info():
     if lt and lt > from_t:
         from_t = lt.replace(minute=0, second=0, microsecond=0)
     res["chart_by_hour"] = model.get_candlestic_data(db, from_t, "%Y-%m-%d %H:00:00")
+    res["chart_by_hour"] = model.get_candlestic_data_hour(db, from_t, "%Y-%m-%d %H:00:00")
 
     lowest_sell_order = model.get_lowest_sell_order(db)
     if lowest_sell_order:

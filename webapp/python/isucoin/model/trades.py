@@ -241,3 +241,33 @@ def run_trade(db):
 
     # 個数が不足していて不成立
     return
+
+
+def get_candlestic_data_hour(db, mt: datetime, tf: str) -> typing.List[CandlestickData]:
+    query = """
+        INSERT INTO candle (`create_at`, `time_str`, `open`, `close`, `high`, `low`)
+        SELECT m.t AS `create_at`, m.tstr AS `time_str`, a.price AS `open`, b.price AS `close`, m.h AS `high`, m.l AS `low`
+        FROM (
+            SELECT
+                MAX(trade.created_at) as t,
+                STR_TO_DATE(DATE_FORMAT(created_at, '%Y-%m-%d %H:00:00'), '%Y-%m-%d %H:%i:%s') AS tstr,
+                MIN(id) AS min_id,
+                MAX(id) AS max_id,
+                MAX(price) AS h,
+                MIN(price) AS l
+            FROM trade
+            WHERE trade.created_at > (SELECT IFNULL(MAX(can.create_at), '1000-01-01 00:00:00') FROM candle as can)
+            GROUP BY tstr
+        ) m
+        JOIN trade a ON a.id = m.min_id
+        JOIN trade b ON b.id = m.max_id
+        ORDER BY m.t
+        ON DUPLICATE KEY UPDATE create_at=m.t, open=a.price, close=b.price, high = m.h, low = m.l
+    """
+    cur = db.cursor()
+    cur.execute(query)
+
+    cur.execute("SELECT create_at, open, close, high, low FROM candle WHERE created_at >= %s", datetime)
+
+    return [CandlestickData(*r) for r in cur]
+
