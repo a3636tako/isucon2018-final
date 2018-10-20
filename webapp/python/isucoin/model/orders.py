@@ -196,7 +196,7 @@ def get_traded_orders(db, user_id: int, trade_id: int) -> typing.List[Order]:
     return [_create_order(r) for r in c]
 
 def _create_order(r):
-    user = users.User(r['user.id'], r['user.back_id'], r['user.name'], r['user.password'], r['usercreated_at'])
+    user = users.User(r['user.id'], r['user.back_id'], r['user.name'], r['user.password'], r['user.created_at'])
     
     trade = trades.Trade(r['trade.id'], r['trade.amount'], r['trade.price'], r['trade.created_at'])
 
