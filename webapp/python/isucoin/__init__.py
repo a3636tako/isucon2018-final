@@ -172,11 +172,11 @@ def signin():
     try:
         user = model.login(db, bank_id, password)
     except model.UserNotFound as e:
-        if not user.id in failure_count:
-            failure_count[user.id] = 1
+        if not bank_id in failure_count:
+            failure_count[bank_id] = 1
         else:
-            failure_count[user.id] += 1
-        if failure_count[user.id] >= 5:
+            failure_count[bank_id] += 1
+        if failure_count[bank_id] >= 5:
             return error_json(403, "too many failures")
 
         return error_json(404, e.msg)
