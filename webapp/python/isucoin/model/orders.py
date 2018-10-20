@@ -204,3 +204,4 @@ def _create_order(r):
     order.user = user
     order.trade = trade
 
+    return order
