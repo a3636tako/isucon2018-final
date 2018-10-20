@@ -190,7 +190,7 @@ def cancel_order(db, order: Order, reason: str):
 def get_traded_orders(db, user_id: int, trade_id: int) -> typing.List[Order]:
     c = db.cursor()
     c.execute(
-        "SELECT * FROM orders INNER JOIN user ON orders.user_id = user.id INNER JOIN trade ON orders.trade_id = trade.id WHERE user_id = %s AND trade_id IS NOT NULL AND trade_id > %s ORDER BY created_at ASC",
+        "SELECT * FROM orders INNER JOIN user ON orders.user_id = user.id INNER JOIN trade ON orders.trade_id = trade.id WHERE orders.user_id = %s AND orders.trade_id IS NOT NULL AND orders.trade_id > %s ORDER BY orders.created_at ASC",
         (user_id, trade_id),
     )
     return [_create_order(r) for r in c]
